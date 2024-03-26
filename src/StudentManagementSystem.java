@@ -1,9 +1,9 @@
 import java.io.*;
+import java.util.LinkedList;
 import java.util.Scanner;
-
-public class StudentManagementSystem {
-
+public class StudentManagementSystem{
     private File file; //Wirtten by cam
+    private LinkedList<Student> students = new LinkedList<Student>();
     Scanner scan = new Scanner(System.in);
 
 //    Wirtten by Cam
@@ -59,19 +59,57 @@ public class StudentManagementSystem {
             e.printStackTrace();
         }
     }
-
+    public void searchStudent(){ //WIP, allows to search for a Student. Created by Connor
+        System.out.println("Type 1 to Search by ID,\nType 2 to Search by Name.");
+        int choice = scan.nextInt();
+        switch(choice){
+            case 1:
+                System.out.print("Please Enter The Student's ID You Wish To Search: ");
+                int ID = scan.nextInt();
+                for (int i = 0; i < this.students.size(); i++) {
+                    if(this.students.get(i).getID() == ID){
+                        System.out.println("Student found:");
+                        this.students.get(i).readStudent();
+                        return;
+                    }
+                }
+                System.out.println("Student not found, by ID: " + ID);
+                return;
+            case 2:
+                System.out.print("Please Enter The Student's Name You Wish To Search: ");
+                String searchTarget = scan.next();
+                for(int i = 0; i < this.students.size(); i++){
+                    if(this.students.get(i).getName().equals(searchTarget)){
+                        System.out.println("Student found:");
+                        this.students.get(i).readStudent();
+                    }
+                }
+                System.out.println("Student not found, by Name: " + searchTarget);
+                return;
+        }
+    }
     public void addStudent(){ //WIP, allows to add a Student in the database. Written By Connor, Cam helped with figuring out funtionality
         try{
             FileWriter writer = new FileWriter("Students.txt", true);
 
             System.out.print("Enter a Student ID: ");
             int studentID = scan.nextInt();
+            for(int i = 0; i < this.students.size(); i++){
+                if(this.students.get(i).getID() == studentID){
+                    System.out.println("Duplicate ID already exists.");
+                    return;
+                }
+            }
             System.out.print("Enter the Student's Name: ");
             String studentName = scan.next();
             System.out.print("Enter the Student's Age: ");
             int studentAge = scan.nextInt();
             System.out.print("Enter the Student's Grade: ");
             int studentGrade = scan.nextInt();
+            if(studentGrade < 0 && studentGrade > 12){
+                System.out.println("Error. Student's grade not valid.");
+                return;
+            }
 
             writer.write(String.valueOf(studentID + " "));
             writer.write(studentName + " ");
@@ -85,26 +123,63 @@ public class StudentManagementSystem {
             e.printStackTrace();
         }
     }
-
-    public void deleteStudent(){ //Deletes a student from the system by providing an ID.
-        try{
-            BufferedReader reader = new BufferedReader(new FileReader("Students.txt"));
-            FileWriter writer = new FileWriter("Students.txt", true);
-            String line = reader.readLine();
-
-            System.out.print("Student ID to be removed from the database: ");
-            int selectedID = scan.nextInt();
-
-            System.out.println(line);
-            if(String.valueOf(selectedID) == line){
-                writer.append("");
-            }
-        }catch (IOException e){
-            e.printStackTrace();
+    public void deleteStudent(){ //WIP, Deletes a student from the system by providing an ID. Written by Connor
+        System.out.println("Type 1 - Delete by ID\nType 2 - Delete by Name\nType 3 - Delete by Grade");
+        int choice = scan.nextInt();
+        switch (choice){
+            case 1:
+                System.out.print("Type a Student's ID: ");
+                int targetID = scan.nextInt();
+                for (int i = 0; i < this.students.size(); i++){
+                    if(this.students.get(i).getID() == targetID){
+                        this.students.remove(i);
+                        return;
+                    }
+                }
+                System.out.print("Student not found by ID: " + targetID);
+                return;
+            case 2:
+                System.out.print("Type a Student's Name: ");
+                String targetName = scan.next();
+                for (int i = 0; i < this.students.size(); i++){
+                    if(this.students.get(i).getName().equals(targetName)){
+                        this.students.remove(i);
+                        return;
+                    }
+                }
+            case 3:
+                System.out.print("Type a Student's Grade: ");
+                int targetGrade = scan.nextInt();
+                if(targetGrade < 0 && targetGrade > 12){
+                    System.out.print("Grade invalid. Please input a grade between 0-12.");
+                    return;
+                }
+                for (int i = 0; i < this.students.size(); i++){
+                    if(this.students.get(i).getGrade() == targetGrade){
+                        this.students.remove(i);
+                    }
+                }
+                System.out.println("All Students are Removed from Grade " + targetGrade);
         }
+//        try{
+//            BufferedReader reader = new BufferedReader(new FileReader("Students.txt"));
+//            FileWriter writer = new FileWriter("Students.txt", true);
+//            String line = reader.readLine();
+//
+//            System.out.print("Student ID to be removed from the database: ");
+//            int selectedID = scan.nextInt();
+//
+//            System.out.println(line);
+//            if(String.valueOf(selectedID) == line){
+//                writer.append("");
+//            }
+//        }catch (IOException e){
+//            e.printStackTrace();
+//        }
 
     }
 
+//    This shows all the students in the database. Done by Cam
     public void showAllStudents(){
         try{
             BufferedReader reader = new BufferedReader (new FileReader("Students.txt"));
