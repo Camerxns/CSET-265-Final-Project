@@ -1,7 +1,8 @@
 import java.io.*;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Scanner;
-public class StudentManagementSystem{
+public class StudentManagementSystem {
     private File file; //Wirtten by cam
     private LinkedList<Student> students = new LinkedList<Student>();
     Scanner scan = new Scanner(System.in);
@@ -77,18 +78,40 @@ public class StudentManagementSystem{
                 return;
             case 2:
                 System.out.print("Please Enter The Student's Name You Wish To Search: ");
-                String searchTarget = scan.next();
+                scan.nextLine();
+                String searchTarget = scan.nextLine();
                 for(int i = 0; i < this.students.size(); i++){
                     if(this.students.get(i).getName().equals(searchTarget)){
                         System.out.println("Student found:");
                         this.students.get(i).readStudent();
+                        return;
                     }
                 }
                 System.out.println("Student not found, by Name: " + searchTarget);
-                return;
         }
     }
-    public void addStudent(){ //WIP, allows to add a Student in the database. Written By Connor, Cam helped with figuring out funtionality
+    public void studentGenerator(){
+        Random random = new Random();
+        String[] names = {
+                "John Doe", "Jane Doe", "Cameron Angelilli", "Connor Hamilton",
+                "Fahim Shams", "Carlos Oliveira", "Ada Wong", "Leon S. Kennedy",
+                "Chris Redfield", "Jill Valentine", "Claire Redfield", "Albert Wesker",
+                "Ashley Graham", "Ichigo Kurosaki", "Rukia Kuchiki", "Grimmjow Jaegerjaquez",
+                "Bambietta Basterbine", "Gremmy Thoumeaux", "Tier Harribel", "Nelliel Tu"
+        };
+        Student[] studentsArr = new Student[20];
+        for(int i = 0; i < studentsArr.length; i++){
+            int id = i + 1;
+            String name = names[random.nextInt(names.length)];
+            int age = random.nextInt(15) + 5;
+            int grade = random.nextInt(13);
+
+            studentsArr[i] = new Student(id, name, age, grade);
+            this.students.add(studentsArr[i]);
+        }
+        System.out.print("Finished adding students.");
+    }
+    public void addStudent(){ //WIP, allows to add a Student in the database, by Name/ID. Written By Connor, Cam helped with figuring out funtionality
         try{
             FileWriter writer = new FileWriter("Students.txt", true);
 
@@ -101,7 +124,8 @@ public class StudentManagementSystem{
                 }
             }
             System.out.print("Enter the Student's Name: ");
-            String studentName = scan.next();
+            scan.nextLine();
+            String studentName = scan.nextLine();
             System.out.print("Enter the Student's Age: ");
             int studentAge = scan.nextInt();
             System.out.print("Enter the Student's Grade: ");
@@ -140,7 +164,8 @@ public class StudentManagementSystem{
                 return;
             case 2:
                 System.out.print("Type a Student's Name: ");
-                String targetName = scan.next();
+                scan.nextLine();
+                String targetName = scan.nextLine();
                 for (int i = 0; i < this.students.size(); i++){
                     if(this.students.get(i).getName().equals(targetName)){
                         this.students.remove(i);
@@ -180,17 +205,29 @@ public class StudentManagementSystem{
     }
 
 //    This shows all the students in the database. Done by Cam
+//    public void showAllStudents(){
+//        try{
+//            BufferedReader reader = new BufferedReader (new FileReader("Students.txt"));
+//            String line = reader.readLine();
+//            while(line != null){
+//                System.out.println(line);
+//                line = reader.readLine();
+//            }
+//        }
+//        catch (IOException e){
+//            e.printStackTrace();
+//        }
+//    }
     public void showAllStudents(){
-        try{
-            BufferedReader reader = new BufferedReader (new FileReader("Students.txt"));
-            String line = reader.readLine();
-            while(line != null){
-                System.out.println(line);
-                line = reader.readLine();
+        for (int i = 0; i < this.students.size(); i++) {
+            if(i % 4 == 0){
+                System.out.print("\n");
             }
-        }
-        catch (IOException e){
-            e.printStackTrace();
+            if(i + 1 >= students.size()){
+                System.out.print(this.students.get(i).getName());
+            }else{
+                System.out.print(this.students.get(i).getName() + ", ");
+            }
         }
     }
 }

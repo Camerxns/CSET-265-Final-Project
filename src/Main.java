@@ -1,11 +1,13 @@
 import java.util.Scanner;
-
 public class Main {
     public static void main(String[] args) {
-
         StudentManagementSystem sms = new StudentManagementSystem("Students.txt");
         Scanner scan = new Scanner(System.in);
 
+//        For testing generator
+//        sms.studentGenerator();
+//        sms.searchStudent();
+//        sms.showAllStudents();
 
 
         System.out.println("Please Enter A Number Based On What You Would Like To Do!");
