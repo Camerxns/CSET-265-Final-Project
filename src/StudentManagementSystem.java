@@ -4,63 +4,9 @@ import java.util.Random;
 import java.util.Scanner;
 public class StudentManagementSystem {
     private File file; //Wirtten by cam
-    private LinkedList<Student> students = new LinkedList<Student>();
+    public LinkedList<Student> students = new LinkedList<Student>();
     Scanner scan = new Scanner(System.in);
-
-//    Wirtten by Cam
-    public StudentManagementSystem(String filename) {
-        this.file = new File(filename);
-        createFileIfNotExists(); // This will create the file if the file does not exist
-    }
-
-//    I created this function as a way to verify where the txt file should go as when I had the txt file in the src
-//    folder it was returning that the file did not exist. You can also use this to create new txt files for different lists. Written By Cam
-    private void createFileIfNotExists() {
-        try {
-            if (!file.exists()) {
-                if (file.createNewFile()) {
-                    System.out.println("File created: " + file.getName());
-                } else {
-                    System.out.println("Failed to create the file.");
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred while creating the file.");
-            e.printStackTrace();
-        }
-    }
-
-
-//    This function was created in order to read the file and display data back to the user. Written By Cam
-    public void readFile() {
-        if (!file.exists()) {
-            System.out.println("File does not exist.");
-            return;
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (IOException e) {
-            System.out.println("An error occurred while reading the file.");
-            e.printStackTrace();
-        }
-    }
-
-//    This function was created to write to the txt file to store whatever content someone wanted to in here. Written By Cam
-    public void writeFile(String content) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, true))) {
-            writer.write(content);
-            writer.newLine();
-            System.out.println("Content written to the file successfully.");
-        } catch (IOException e) {
-            System.out.println("An error occurred while writing to the file.");
-            e.printStackTrace();
-        }
-    }
-    public void searchStudent(){ //WIP, allows to search for a Student. Created by Connor
+    public void searchStudent(){ //Allows to search for a Student. Created by Connor
         System.out.println("Type 1 to Search by ID,\nType 2 to Search by Name.");
         int choice = scan.nextInt();
         switch(choice){
@@ -90,31 +36,54 @@ public class StudentManagementSystem {
                 System.out.println("Student not found, by Name: " + searchTarget);
         }
     }
-    public void studentGenerator(){
+    public void studentGenerator(){ //Written by Connor. Generates random students
         Random random = new Random();
-        String[] names = {
-                "John Doe", "Jane Doe", "Cameron Angelilli", "Connor Hamilton",
-                "Fahim Shams", "Carlos Oliveira", "Ada Wong", "Leon S. Kennedy",
-                "Chris Redfield", "Jill Valentine", "Claire Redfield", "Albert Wesker",
-                "Ashley Graham", "Ichigo Kurosaki", "Rukia Kuchiki", "Grimmjow Jaegerjaquez",
-                "Bambietta Basterbine", "Gremmy Thoumeaux", "Tier Harribel", "Nelliel Tu"
+        String[] firstNames = {
+                "John", "Jane", "Cameron", "Connor",
+                "Fahim", "Carlos", "Ada", "Leon",
+                "Chris ", "Jill ", "Claire", "Albert",
+                "Ashley ", "Ichigo", "Rukia", "Grimmjow",
+                "Bambietta", "Gremmy ", "Tier", "Nelliel",
+                "Ethan", "Ava", "Liam", "Isabella",
+                "Noah", "Sophia", "Mason", "Mia",
+                "Benjamin", "Charlotte", "Elijah", "Amelia",
+                "Oliver", "Harper", "James", "Evelyn",
+                "Alexander", "Abigail", "William", "Sofia",
+                "Daniel", "Elizabeth", "Michael", "Emily",
+                "Elijah", "Avery", "Matthew", "Grace",
+                "Logan", "Scarlett", "Lucas", "Aria",
+                "Henry", "Madison", "Jackson", "Chloe",
+                "Sebastian", "Ella", "Aiden", "Lily",
+                "Gabriel", "Layla", "Carter", "Riley",
+                "Wyatt", "Zoe", "Jayden", "Stella",
+                "Christopher", "Victoria"
         };
+        String[] lastNames = {
+                "Doe", "Angelilli", "Hamilton", "Shams",
+                "Oliveira", "Wong", "Kennedy", "Redfield",
+                "Valentine", "Wesker", "Graham", "Kurosaki",
+                "Kuchiki", "Jaegerjaquez", "Basterbine", "Thoumeaux",
+                "Harribel", "Tu", "Johnson", "Martinez",
+                "Smith", "Brown", "Jones", "Garcia",
+                "Miller", "Davis", "Rodriguez", "Jackson",
+                "Wilson", "Anderson", "Thomas", "Martin",
+                "Taylor", "Hernandez", "Moore", "Thompson",
+                "White", "Lopez", "Hall", "Lee",
+                "Perez", "Harris", "Clark", "Allen"
+        };
+
         Student[] studentsArr = new Student[20];
         for(int i = 0; i < studentsArr.length; i++){
             int id = i + 1;
-            String name = names[random.nextInt(names.length)];
+            String name = firstNames[random.nextInt(firstNames.length)] + " " + lastNames[random.nextInt(lastNames.length)];
             int age = random.nextInt(15) + 5;
             int grade = random.nextInt(13);
 
             studentsArr[i] = new Student(id, name, age, grade);
             this.students.add(studentsArr[i]);
         }
-        System.out.print("Finished adding students.");
     }
-    public void addStudent(){ //WIP, allows to add a Student in the database, by Name/ID. Written By Connor, Cam helped with figuring out funtionality
-        try{
-            FileWriter writer = new FileWriter("Students.txt", true);
-
+    public void addStudent(){ //Allows to add a Student in the database. Written By Connor, Cam helped with figuring out funtionality
             System.out.print("Enter a Student ID: ");
             int studentID = scan.nextInt();
             for(int i = 0; i < this.students.size(); i++){
@@ -134,28 +103,17 @@ public class StudentManagementSystem {
                 System.out.println("Error. Student's grade not valid.");
                 return;
             }
-
-            writer.write(String.valueOf(studentID + " "));
-            writer.write(studentName + " ");
-            writer.write(String.valueOf(studentAge) + " ");
-            writer.write(String.valueOf(studentGrade) + " ");
-            writer.write(System.getProperty("line.separator"));
-            writer.flush();
-            writer.close();
-        }catch (IOException e){
-            System.out.println("Error, failed somehow");
-            e.printStackTrace();
-        }
+            this.students.add(new Student(studentID, studentName, studentAge, studentGrade));
     }
-    public void deleteStudent(){ //WIP, Deletes a student from the system by providing an ID. Written by Connor
+    public void deleteStudent() { //Deletes a student from the system by providing an ID, Name, and Grade. Written by Connor
         System.out.println("Type 1 - Delete by ID\nType 2 - Delete by Name\nType 3 - Delete by Grade");
         int choice = scan.nextInt();
-        switch (choice){
+        switch (choice) {
             case 1:
                 System.out.print("Type a Student's ID: ");
                 int targetID = scan.nextInt();
-                for (int i = 0; i < this.students.size(); i++){
-                    if(this.students.get(i).getID() == targetID){
+                for (int i = 0; i < this.students.size(); i++) {
+                    if (this.students.get(i).getID() == targetID) {
                         this.students.remove(i);
                         return;
                     }
@@ -166,8 +124,8 @@ public class StudentManagementSystem {
                 System.out.print("Type a Student's Name: ");
                 scan.nextLine();
                 String targetName = scan.nextLine();
-                for (int i = 0; i < this.students.size(); i++){
-                    if(this.students.get(i).getName().equals(targetName)){
+                for (int i = 0; i < this.students.size(); i++) {
+                    if (this.students.get(i).getName().equals(targetName)) {
                         this.students.remove(i);
                         return;
                     }
@@ -175,50 +133,20 @@ public class StudentManagementSystem {
             case 3:
                 System.out.print("Type a Student's Grade: ");
                 int targetGrade = scan.nextInt();
-                if(targetGrade < 0 && targetGrade > 12){
+                if (targetGrade < 0 && targetGrade > 12) {
                     System.out.print("Grade invalid. Please input a grade between 0-12.");
                     return;
                 }
-                for (int i = 0; i < this.students.size(); i++){
-                    if(this.students.get(i).getGrade() == targetGrade){
+                for (int i = 0; i < this.students.size(); i++) {
+                    if (this.students.get(i).getGrade() == targetGrade) {
                         this.students.remove(i);
                     }
                 }
                 System.out.println("All Students are Removed from Grade " + targetGrade);
         }
-//        try{
-//            BufferedReader reader = new BufferedReader(new FileReader("Students.txt"));
-//            FileWriter writer = new FileWriter("Students.txt", true);
-//            String line = reader.readLine();
-//
-//            System.out.print("Student ID to be removed from the database: ");
-//            int selectedID = scan.nextInt();
-//
-//            System.out.println(line);
-//            if(String.valueOf(selectedID) == line){
-//                writer.append("");
-//            }
-//        }catch (IOException e){
-//            e.printStackTrace();
-//        }
-
     }
 
-//    This shows all the students in the database. Done by Cam
-//    public void showAllStudents(){
-//        try{
-//            BufferedReader reader = new BufferedReader (new FileReader("Students.txt"));
-//            String line = reader.readLine();
-//            while(line != null){
-//                System.out.println(line);
-//                line = reader.readLine();
-//            }
-//        }
-//        catch (IOException e){
-//            e.printStackTrace();
-//        }
-//    }
-    public void showAllStudents(){
+    public void showAllStudents(){ //Created by Connor
         for (int i = 0; i < this.students.size(); i++) {
             if(i % 4 == 0){
                 System.out.print("\n");
